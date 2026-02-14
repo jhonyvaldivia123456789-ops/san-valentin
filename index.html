@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>San Valentín 💖</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+margin:0;
+padding:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+color:white;
+position:relative;
+}
+
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+
+background-image:url("fondo-chat.png"); /* 🔥 aquí pones tu imagen */
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+
+z-index:-1;
+}
+
+
+/* CONTENEDORES */
+.contenedor{
+position:absolute;
+width:90%;
+max-width:600px;
+background:rgba(0,0,0,0.6);
+padding:35px;
+border-radius:25px;
+text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+opacity:0;
+transform:scale(0.8);
+transition:0.4s;
+}
+
+.activa{opacity:1;transform:scale(1);z-index:1;}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:30px;
+cursor:pointer;
+margin:10px;
+font-weight:bold;
+background:white;
+color:#ff4d6d;
+transition:0.3s;
+}
+
+button:hover{
+background:#ff4d6d;
+color:white;
+transform:scale(1.1);
+}
+
+#no{position:absolute;}
+
+img{
+width:140px;
+border-radius:15px;
+margin:5px;
+}
+
+#contador{margin:15px 0;font-size:18px;}
+
+.barra{
+width:100%;
+height:15px;
+background:rgba(255,255,255,0.3);
+border-radius:10px;
+margin-top:10px;
+overflow:hidden;
+}
+
+.progreso{
+height:100%;
+width:0%;
+background:white;
+transition:0.3s;
+}
+
+.corazon{
+position:absolute;
+font-size:28px;
+cursor:pointer;
+}
+
+.malo{color:black;}
+
+/* ===== MODAL BONITO ===== */
+#modalMalo{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.modalContenido{
+background:white;
+color:#ff4d6d;
+padding:25px;
+border-radius:20px;
+text-align:center;
+width:90%;
+max-width:350px;
+animation:aparecer 0.4s ease;
+box-shadow:0 0 40px rgba(255,0,100,0.6);
+}
+
+@keyframes vibrar{
+0%{transform:translateX(0);}
+25%{transform:translateX(-5px);}
+50%{transform:translateX(5px);}
+75%{transform:translateX(-5px);}
+100%{transform:translateX(0);}
+}
+
+
+
+
+
+.modalContenido img{
+width:100%;
+border-radius:15px;
+margin:10px 0;
+}
+
+
+@keyframes aparecer{
+from{transform:scale(0.5);opacity:0;}
+to{transform:scale(1);opacity:1;}
+}
+
+/* ===== PAGINA 4 VIDEO CORRECTO ===== */
+
+#pagina4{
+  position: relative;
+  overflow-y: auto;
+max-height: 90vh;
+  padding-right: 10px;
+}
+
+/* El video se queda fijo dentro del contenedor */
+#videoPoema{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 25px;
+  z-index: 0;
+  filter: brightness(0.5);
+}
+
+/* Capa oscura para que el texto se lea */
+#pagina4::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.4);
+  border-radius:25px;
+  z-index:1;
+}
+
+/* Texto encima del video */
+#pagina4 h1,
+#pagina4 p,
+#pagina4 button{
+  position: relative;
+  z-index: 2;
+}
+
+
+</style>
+
+</head>
+<body>
+<!-- 🎵 MUSICA DE FONDO -->
+<audio id="musicaFondo" loop>
+  <source src="audio fondo.mp3" type="audio/mpeg">
+</audio>
+
+<!-- ================= PAGINA 1 ================= -->
+<div id="pagina1" class="contenedor activa">
+<h1>¿Quieres ser mi San Valentín? 💘</h1>
+<button onclick="cambiarPagina(2)">Sí 💖</button>
+<button id="no">No 😢</button>
+<p id="mensajeNo"></p>
+</div>
+
+<!-- ================= PAGINA 2 ================= -->
+<div id="pagina2" class="contenedor">
+<h1>💞 Nuestro Tiempo Juntos 💞</h1>
+<div id="contador"></div>
+
+<img src="foto 1.jpeg">
+<img src="foto 2.jpeg">
+<img src="foto 3.jpeg">
+
+<p style="margin-top:15px;font-style:italic;">
+"Eres mi lugar favorito en el mundo 💕"
+</p>
+
+<button onclick="cambiarPagina(3)">Ir al Juego 🎮</button>
+</div>
+
+<!-- ================= PAGINA 3 ================= -->
+<div id="pagina3" class="contenedor">
+<h1>Atrapa los corazones 💗</h1>
+<p>Nivel: <span id="nivel">1</span></p>
+<p>Puntos: <span id="puntos">0</span>/ <span id="meta">7</span></p>
+
+<div class="barra">
+<div class="progreso" id="barraProgreso"></div>
+</div>
+
+<p id="mensajeFinal"></p>
+<button id="btnSiguienteNivel" style="display:none;" onclick="siguienteNivel()">Siguiente Nivel 💕</button>
+
+<p id="poemaNivel" style="margin-top:15px; font-style:italic;"></p>
+<p>Tiempo restante: <span id="tiempoNivel">15</span>s</p>
+
+</div>
+<!-- ================= PAGINA 4 ================= -->
+<div id="pagina4" class="contenedor">
+  <video autoplay muted loop id="videoPoema">
+  <source src="video.mp4" type="video/mp4">
+</video>
+
+<h1>💌 Para Ti 💌</h1>
+
+<p style="margin-top:20px; line-height:1.8; text-align:left; font-size:15px;">
+
+¡Mi amor, mi princesa radiante! ✨<br><br>
+
+Hoy, 14 de febrero, el día en que el mundo entero habla de amor,<br>
+yo solo puedo pensar en ti, en nosotros,<br>
+en todo lo que hemos caminado… y en todo lo que aún nos falta.<br><br>
+
+Nuestra historia no empezó con flores ni con promesas dulces.<br>
+Empezó con tropiezos, con palabras que dolieron,<br>
+con mis errores que todavía me pesan en el pecho como piedras.<br>
+Y sin embargo, aquí estamos.<br><br>
+
+Aquí estoy yo, mirándote con el corazón abierto ❤️,<br>
+aprendiendo cada día a quererte mejor,<br>
+aunque a veces tropiece todavía.<br><br>
+
+Perdóname, mi vida.<br>
+Perdóname por las noches en que te hice dudar,<br>
+por las veces que mi orgullo fue más grande que mi amor,<br>
+por las indiferencias que te lastimaron sin que yo lo quisiera.<br>
+Cada lágrima tuya que causé es una espina que llevo clavada.<br><br>
+
+Y aunque hoy sigo trabajando en ser el hombre que mereces,<br>
+quiero que sepas que cada esfuerzo, cada cambio,<br>
+lo hago pensando en ti.<br><br>
+
+Porque tú, mi cangrejito hermoso 🦀,<br>
+eres la primera persona que me ha hecho sentir esto tan grande.<br>
+Eres la primera que me robó el sueño,<br>
+la primera que me enseñó que amar duele… pero también sana.<br><br>
+
+Me gusta todo de ti: tu risa cuando te pones nerviosa,<br>
+tu forma de mirarme como si yo fuera suficiente,<br>
+tu corazón tan puro que aún sigue aquí, a mi lado,<br>
+a pesar de mis tormentas.<br><br>
+
+Te amo, princesa.<br>
+Te amo con todo lo que soy y con todo lo que estoy aprendiendo a ser.<br>
+Te necesito como el aire,<br>
+te quiero en mi vida como el sol quiere a la mañana ☀️.<br><br>
+
+Y aunque la distancia nos tenga separados hoy,<br>
+este poema es mi forma de abrazarte fuerte 🤍,<br>
+de decirte que eres mi San Valentín,<br>
+mi regalo, mi sorpresa, mi todo.<br><br>
+
+Este mes especial lo dedico entero a ti.<br>
+Quiero que sientas que eres querida,<br>
+que eres adorada,<br>
+que aunque no estemos cerca,<br>
+mi corazón late a tu ritmo.<br><br>
+
+Y cuando por fin nos veamos…<br>
+tengo preparada una sorpresa que llevo guardada con mucho cariño.<br>
+Algo que solo tú entenderás,<br>
+algo que dice “gracias por quedarte”,<br>
+“gracias por perdonarme”,<br>
+“gracias por enseñarme a amar de verdad”.<br><br>
+
+Aprendí a quererte poco a poco,<br>
+a veces torpemente,<br>
+a veces con miedo,<br>
+pero siempre con el alma entera.<br><br>
+
+Y aunque he cometido errores,<br>
+aunque todavía estoy en proceso,<br>
+quiero que sepas que tú estás dentro de mí<br>
+como yo quiero estar dentro de ti:<br>
+profundo, permanente, verdadero.<br><br>
+
+Eres mi princesa radiante ✨,<br>
+mi cangrejo que camina a mi lado aunque el mar nos separe,<br>
+mi amor más bonito y más difícil.<br><br>
+
+Y hoy, Día de los Enamorados,<br>
+te pido con todo el corazón:<br><br>
+
+<strong>¿Quieres ser mi Valentín? 💖</strong><br><br>
+
+No solo hoy,<br>
+sino todos los días que nos queden por vivir.<br><br>
+
+Te amo hasta el infinito y más allá ♾️,<br>
+con remordimiento por lo que fue,<br>
+con gratitud por lo que es,<br>
+y con ilusión inmensa por lo que vendrá.<br><br>
+
+Tuyo siempre,<br>
+con todo mi ser. ❤️
+
+</p>
+
+<button onclick="cambiarPagina(1)">Volver al inicio 💘</button>
+</div>
+
+
+<!-- ===== MODAL PERSONALIZADO ===== -->
+<div id="modalMalo">
+<div class="modalContenido">
+<h2>💔</h2>
+
+<!-- CAMBIA ESTA FOTO -->
+<img src="foto meme 3.jpeg">
+
+<p><strong>
+Es de seguro que no me amas por eso presionaste eso 😢 "inserto foto de venganza por presionar eso muajaja"
+</strong></p>
+
+<button onclick="cerrarModal()">Perdón 💕</button>
+
+</div>
+</div>
+
+
+<script>
+  /* ===== MUSICA DE FONDO ===== */
+let musica = document.getElementById("musicaFondo");
+musica.volume = 0.2; // volumen bajo (0.0 a 1.0)
+
+function iniciarMusica() {
+    musica.play().catch(()=>{});
+    document.removeEventListener("click", iniciarMusica);
+    document.removeEventListener("touchstart", iniciarMusica);
+}
+
+document.addEventListener("click", iniciarMusica);
+document.addEventListener("touchstart", iniciarMusica);
+
+
+/* ===== CAMBIO DE PAGINA ===== */
+function cambiarPagina(num){
+document.querySelectorAll('.contenedor').forEach(p=>p.classList.remove('activa'));
+document.getElementById("pagina"+num).classList.add('activa');
+
+let video = document.getElementById("videoPoema");
+
+if(num===4){
+  video.style.opacity="1";
+  video.play();
+}else{
+  video.style.opacity="0";
+  video.pause();
+}
+
+if(num===3){iniciarJuego();}
+}
+
+/* ===== BOTON NO ===== */
+const btnNo=document.getElementById("no");
+const mensajeNo=document.getElementById("mensajeNo");
+let escala=1;
+
+function moverNo(){
+btnNo.style.top=Math.random()*200+"px";
+btnNo.style.left=Math.random()*200+"px";
+escala-=0.1;
+btnNo.style.transform="scale("+escala+")";
+mensajeNo.innerText="¿Segura? 😏";
+}
+btnNo.addEventListener("mouseover",moverNo);
+btnNo.addEventListener("touchstart",moverNo);
+
+/* ===== CONTADOR ===== */
+const fechaInicio=new Date("2024-06-17");
+const contador=document.getElementById("contador");
+
+function actualizarContador(){
+const ahora=new Date();
+const diff=ahora-fechaInicio;
+
+const dias=Math.floor(diff/(1000*60*60*24));
+const horas=Math.floor((diff/(1000*60*60))%24);
+const minutos=Math.floor((diff/(1000*60))%60);
+const segundos=Math.floor((diff/1000)%60);
+
+contador.innerHTML=
+`💖 ${dias} días <br>
+💕 ${horas} horas <br>
+💗 ${minutos} minutos <br>
+💓 ${segundos} segundos`;
+}
+setInterval(actualizarContador,1000);
+actualizarContador();
+
+/* ===== JUEGO CON NIVELES + POEMAS ===== */
+let nivel=1;
+let puntos=0;
+let meta=7;
+let velocidad=800;
+let intervalo;
+let intervaloTiempo;
+let tiempoRestante=15;
+let sonidoPop=new Audio("audio pop.mp3");
+
+let poemasNivel={
+1:"Nivel 1 superado 💖\nTu puede mi amor siga siga.",
+2:"Nivel 2 superado 💕\nMi corazón late más rápido por ti.",
+3:"Nivel 3 superado 💘\nEstás lista para el poema final."
+};
+
+function iniciarJuego(){
+nivel=1;
+configurarNivel();
+}
+
+function configurarNivel(){
+
+if(nivel===1){meta=7;velocidad=500;tiempoRestante=15;}
+if(nivel===2){meta=12;velocidad=500;tiempoRestante=13;}
+if(nivel===3){meta=17;velocidad=100;tiempoRestante=15;}
+
+puntos=0;
+
+document.getElementById("nivel").innerText=nivel;
+document.getElementById("meta").innerText=meta;
+document.getElementById("puntos").innerText=puntos;
+document.getElementById("mensajeFinal").innerText="";
+document.getElementById("poemaNivel").innerText="";
+document.getElementById("btnSiguienteNivel").style.display="none";
+document.getElementById("tiempoNivel").innerText=tiempoRestante;
+
+actualizarBarra();
+
+clearInterval(intervalo);
+clearInterval(intervaloTiempo);
+
+intervalo=setInterval(crearCorazon,velocidad);
+
+intervaloTiempo=setInterval(()=>{
+tiempoRestante--;
+document.getElementById("tiempoNivel").innerText=tiempoRestante;
+
+if(tiempoRestante<=0){
+perderNivel();
+}
+},1000);
+}
+
+function actualizarBarra(){
+let porcentaje=(puntos/meta)*100;
+document.getElementById("barraProgreso").style.width=porcentaje+"%";
+}
+
+function crearCorazon(){
+let c=document.createElement("div");
+c.classList.add("corazon");
+
+if(Math.random()<0.2){
+c.innerHTML="💔";
+c.classList.add("malo");
+c.onclick=()=>{
+document.getElementById("modalMalo").style.display="flex";
+};
+}else{
+c.innerHTML="💗";
+c.onclick=()=>{
+puntos++;
+sonidoPop.play();
+document.getElementById("puntos").innerText=puntos;
+actualizarBarra();
+c.remove();
+
+if(puntos>=meta){
+ganarNivel();
+document.body.style.background="linear-gradient(135deg,#ff4d6d,#ff9a9e)";
+setTimeout(()=>{
+document.body.style.background="linear-gradient(135deg,#ff758c,#ff7eb3)";
+},1500);
+
+}
+};
+}
+
+c.style.left=Math.random()*(window.innerWidth-30)+"px";
+c.style.top="0px";
+document.body.appendChild(c);
+
+let bajar=setInterval(()=>{
+c.style.top=parseInt(c.style.top)+4+"px";
+if(parseInt(c.style.top)>window.innerHeight){
+c.remove();
+clearInterval(bajar);
+}
+},20);
+}
+
+function ganarNivel(){
+clearInterval(intervalo);
+clearInterval(intervaloTiempo);
+
+document.getElementById("poemaNivel").innerText=poemasNivel[nivel];
+document.getElementById("btnSiguienteNivel").style.display="inline-block";
+
+if(nivel===3){
+document.getElementById("btnSiguienteNivel").innerText="Ver Poema Final 💌";
+}else{
+document.getElementById("btnSiguienteNivel").innerText="Siguiente Nivel 💕";
+}
+}
+
+function siguienteNivel(){
+if(nivel<3){
+nivel++;
+configurarNivel();
+}else{
+cambiarPagina(4);
+}
+}
+
+function perderNivel(){
+clearInterval(intervalo);
+clearInterval(intervaloTiempo);
+
+document.getElementById("mensajeFinal").innerText="Se acabó el tiempo 😢 intenta otra vez.";
+document.getElementById("btnSiguienteNivel").style.display="inline-block";
+document.getElementById("btnSiguienteNivel").innerText="Intentar otra vez 💕";
+nivel=1;
+};
+
+
+c.style.left=Math.random()*(window.innerWidth-30)+"px";
+c.style.top="0px";
+document.body.appendChild(c);
+
+let bajar=setInterval(()=>{
+c.style.top=parseInt(c.style.top)+4+"px";
+if(parseInt(c.style.top)>window.innerHeight){
+c.remove();
+clearInterval(bajar);
+}
+},20);
+
+
+function cerrarModal(){
+document.getElementById("modalMalo").style.display="none";
+}
+function finJuego(){
+clearInterval(intervalo);
+
+let mensaje="";
+if(puntos<10){
+mensaje="Necesitas más práctica en el amor 😅";
+}else if(puntos<17){
+mensaje="Muy bien 💕 pero puedes amar más 😌";
+}else{
+mensaje="Eres mi campeóna del amor 💖🏆";
+}
+
+document.getElementById("mensajeFinal").innerText=mensaje;
+
+// Esperar 4 segundos y cambiar a página poema
+setTimeout(()=>{
+    cambiarPagina(4);
+},4000);
+}
+
+</script>
+</body>
+</html>
